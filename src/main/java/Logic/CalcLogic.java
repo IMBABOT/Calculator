@@ -8,23 +8,23 @@ import java.util.Map;
 public class CalcLogic {
 
     private StringStack characterStack;
-    private DigitStack digitStack;
-    private StringStack stringStack;
+    private StringStack digitStack;
+    private StringStack resultStack;
+
+    private StringStack temp;
+    private StringStack result;
 
 
     private Map<String, Integer> priorities;
 
 
-    private StringStack reverseString;
-    private DigitStack reverseDigit;
-
     public CalcLogic() {
         characterStack = new StringStack();
-        digitStack = new DigitStack();
-        stringStack = new StringStack();
+        digitStack = new StringStack();
         priorities = new HashMap<>();
-        reverseString = new StringStack();
-        reverseDigit = new DigitStack();
+        resultStack = new StringStack();
+        result = new StringStack();
+        temp = new StringStack();
         addPriorities();
     }
 
@@ -52,34 +52,58 @@ public class CalcLogic {
         String[] arr = s.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
         for (int i = 0; i < arr.length; i++) {
-            stringStack.push(arr[i]);
-        }
-
-        while (!stringStack.isEmpty()) {
-            if ((!stringStack.isEmpty()) && stringStack.peek().matches("[0-9]*\\.?[0-9]*")) {
-                digitStack.push(Double.valueOf(stringStack.pop()));
-            }
-            if ((!stringStack.isEmpty()) && stringStack.peek().matches("[(+=\\-*/^)]+")) {
-                characterStack.push(stringStack.pop());
+            if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
+                digitStack.push(arr[i]);
+            } else if (arr[i].matches("[(+=\\-*/^)]+")) {
+                characterStack.push(arr[i]);
             }
         }
-        reverse();
+        unionRevers();
     }
 
+    private void unionRevers() {
+        while (!characterStack.isEmpty()) {
+            digitStack.push(characterStack.pop());
+        }
 
-    private void reverse(){
         while (!digitStack.isEmpty()) {
-            reverseDigit.push(digitStack.pop());
+            temp.push(digitStack.pop());
         }
+        answer();
 
-        while (!characterStack.isEmpty()){
-            reverseString.push(characterStack.pop());
+    }
+
+    private void answer() {
+        double first = 0;
+        double second = 0;
+        double res = 0;
+        String sym = "";
+
+        while (!temp.isEmpty()){
+            if (temp.peek().matches(("[0-9]*\\.?[0-9]*"))){
+                result.push(temp.pop());
+            }
+            if (temp.peek().matches("[(+=\\-*/^)]+")){
+                first = Double.valueOf(result.pop());
+                second = Double.valueOf(result.pop());
+                sym = temp.pop();
+
+                if (sym.equals("+")){
+                    res = second + first;
+                    result.push(String.valueOf(res));
+                }else if (sym.equals("-")){
+                    res = second - first;
+                    result.push(String.valueOf(res));
+                }else if (sym.equals("*")){
+                    res = second * first;
+                    result.push(String.valueOf(res));
+                }else if (sym.equals("/")){
+                    res = second / first;
+                    result.push(String.valueOf(res));
+                }
+            }
         }
-
-        System.out.println(digitStack);
-        System.out.println(characterStack);
-
-
+        System.out.println(result);
     }
 }
 
