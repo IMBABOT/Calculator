@@ -13,13 +13,16 @@ public class CalcLogic {
 
     private StringStack temp;
     private StringStack result;
+    private String[] arr;
+    private String expression;
 
 
 
     private Map<String, Integer> priorities;
 
 
-    public CalcLogic() {
+    public CalcLogic(String expression) {
+        this.expression = expression;
         characterStack = new StringStack();
         digitStack = new StringStack();
         priorities = new HashMap<>();
@@ -27,6 +30,7 @@ public class CalcLogic {
         result = new StringStack();
         temp = new StringStack();
         addPriorities();
+        convertString();
     }
 
     private void addPriorities() {
@@ -34,8 +38,6 @@ public class CalcLogic {
         priorities.put("/", 3);
         priorities.put("+", 2);
         priorities.put("-", 2);
-        priorities.put("(", 1);
-        priorities.put(")", 1);
         priorities.put("0", 0);
         priorities.put("1", 0);
         priorities.put("2", 0);
@@ -49,8 +51,8 @@ public class CalcLogic {
     }
 
 
-    public void convertString(String s) {
-        String[] arr = s.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
+    public void convertString() {
+          arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
@@ -114,7 +116,7 @@ public class CalcLogic {
                     result.push(String.valueOf(res));
                 }
             }
-            }
-        System.out.println(result);
         }
+        System.out.println(result);
     }
+}
