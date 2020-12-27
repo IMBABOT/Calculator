@@ -81,7 +81,6 @@ public class CalcLogic {
             temp.push(digitStack.pop());
         }
         answer();
-
     }
 
     private void answer() {
@@ -90,44 +89,32 @@ public class CalcLogic {
         double res = 0;
         String sym = "";
 
+
+
         while (!temp.isEmpty()){
             if (temp.peek().matches(("[0-9]*\\.?[0-9]*"))){
                 result.push(temp.pop());
             }
-            if (temp.peek().matches("[(]")){
-                result.push(temp.pop());
-            }
-            if (temp.peek().matches("[)]")){
-                temp.pop();
-                while (!temp.peek().matches("[(]")){
-                    temp.pop();
-                    if (temp.peek().matches("[(]")){
-                        temp.pop();
-                    }
-                }
-            }
-            if (temp.peek().matches("[+=\\-*/^)]+")){
+            if (temp.peek().matches("[+=\\-*/^)]+")) {
                 first = Double.valueOf(result.pop());
                 second = Double.valueOf(result.pop());
                 sym = temp.pop();
 
-                if (sym.equals("+")){
+                if (sym.equals("+")) {
                     res = second + first;
                     result.push(String.valueOf(res));
-                }else if (sym.equals("-")){
+                } else if (sym.equals("-")) {
                     res = second - first;
                     result.push(String.valueOf(res));
-                }else if (sym.equals("*")){
+                } else if (sym.equals("*")) {
                     res = second * first;
                     result.push(String.valueOf(res));
-                }else if (sym.equals("/")){
+                } else if (sym.equals("/")) {
                     res = second / first;
                     result.push(String.valueOf(res));
                 }
             }
-        }
+            }
         System.out.println(result);
+        }
     }
-}
-
-
