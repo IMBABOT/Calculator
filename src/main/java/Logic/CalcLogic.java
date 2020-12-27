@@ -15,6 +15,7 @@ public class CalcLogic {
     private StringStack result;
 
 
+
     private Map<String, Integer> priorities;
 
 
@@ -54,11 +55,21 @@ public class CalcLogic {
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
                 digitStack.push(arr[i]);
-            } else if (arr[i].matches("[(+=\\-*/^)]+")) {
+            }else  if (arr[i].matches("[(]")) {
+                characterStack.push(arr[i]);
+            }else if (arr[i].matches("[)]")){
+                while (!characterStack.peek().matches("[(]")){
+                    digitStack.push(characterStack.pop());
+                    if (characterStack.peek().matches("[(]")){
+                        characterStack.pop();
+                        break;
+                    }
+                }
+            } else if (arr[i].matches("[+=\\-*/^]+")) {
                 characterStack.push(arr[i]);
             }
         }
-        unionRevers();
+         unionRevers();
     }
 
     private void unionRevers() {
@@ -83,7 +94,19 @@ public class CalcLogic {
             if (temp.peek().matches(("[0-9]*\\.?[0-9]*"))){
                 result.push(temp.pop());
             }
-            if (temp.peek().matches("[(+=\\-*/^)]+")){
+            if (temp.peek().matches("[(]")){
+                result.push(temp.pop());
+            }
+            if (temp.peek().matches("[)]")){
+                temp.pop();
+                while (!temp.peek().matches("[(]")){
+                    temp.pop();
+                    if (temp.peek().matches("[(]")){
+                        temp.pop();
+                    }
+                }
+            }
+            if (temp.peek().matches("[+=\\-*/^)]+")){
                 first = Double.valueOf(result.pop());
                 second = Double.valueOf(result.pop());
                 sym = temp.pop();
