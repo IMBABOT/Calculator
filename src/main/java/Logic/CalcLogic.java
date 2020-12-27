@@ -69,7 +69,7 @@ public class CalcLogic {
                 characterStack.push(arr[i]);
             }
         }
-         unionRevers();
+        unionRevers();
     }
 
     private void unionRevers() {
@@ -129,8 +129,5 @@ public class CalcLogic {
         System.out.println(result);
     }
 }
-
-
-
 
 
