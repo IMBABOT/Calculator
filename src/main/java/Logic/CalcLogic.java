@@ -180,4 +180,5 @@ public class CalcLogic {
         }
         return result;
     }
+
 }

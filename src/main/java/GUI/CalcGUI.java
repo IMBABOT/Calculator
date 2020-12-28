@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CalcGUI extends JFrame implements ActionListener {
+public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtExceptionHandler {
 
     private JFrame frame;
     private JTextField textField;
@@ -24,6 +24,7 @@ public class CalcGUI extends JFrame implements ActionListener {
     Font myFont = new Font("Ink Free", Font.BOLD, 30);
 
     CalcGUI(){
+        Thread.setDefaultUncaughtExceptionHandler(this);
         frame = new JFrame("Calculator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(420, 550);
@@ -108,8 +109,8 @@ public class CalcGUI extends JFrame implements ActionListener {
         frame.add(textField);
         frame.setVisible(true);
 
-        this.expression = textField.getText();
-        calcLogic = new CalcLogic(expression);
+
+        calcLogic = new CalcLogic(textField.getText());
     }
 
 
@@ -131,7 +132,6 @@ public class CalcGUI extends JFrame implements ActionListener {
                 textField.setText(textField.getText().concat(String.valueOf(i)));
             }
         }
-
 
         if (obj == decButton){
             textField.setText(textField.getText().concat("."));
@@ -161,8 +161,23 @@ public class CalcGUI extends JFrame implements ActionListener {
             double temp = Double.parseDouble(textField.getText());
             temp*=-1;
             textField.setText(String.valueOf(temp));
-        }else {
-            throw new RuntimeException("Unknown source: " + obj);
         }
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        e.printStackTrace();
+        StackTraceElement[] stackTraceElements = e.getStackTrace();
+        String message;
+        if (stackTraceElements.length == 0){
+            message = "zero elements in stacktrace";
+        }else{
+            message = e.getClass().getCanonicalName() +
+                    ": " + e.getMessage() + "\n" +
+                    "\t at "  + stackTraceElements[0];
+        }
+
+        JOptionPane.showMessageDialog(this, message);
+        System.exit(1);
     }
 }
