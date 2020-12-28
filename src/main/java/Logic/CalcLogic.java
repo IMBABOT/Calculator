@@ -38,6 +38,8 @@ public class CalcLogic {
         priorities.put("/", 3);
         priorities.put("+", 2);
         priorities.put("-", 2);
+        priorities.put("(", 1);
+        priorities.put(")", -1);
         priorities.put("0", 0);
         priorities.put("1", 0);
         priorities.put("2", 0);
@@ -52,26 +54,50 @@ public class CalcLogic {
 
 
     public void convertString() {
-          arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
+        arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
         for (int i = 0; i < arr.length; i++) {
             if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
                 digitStack.push(arr[i]);
-            }else  if (arr[i].matches("[(]")) {
+            } else if (arr[i].matches("[+=\\-*/(^)]+")) {
                 characterStack.push(arr[i]);
-            }else if (arr[i].matches("[)]")){
-                while (!characterStack.peek().matches("[(]")){
-                    digitStack.push(characterStack.pop());
-                    if (characterStack.peek().matches("[(]")){
-                        characterStack.pop();
-                        break;
-                    }
+                if (characterStack.peek().matches("[+\\-*/]")) {
+                    priority(characterStack.pop());
                 }
-            } else if (arr[i].matches("[+=\\-*/^]+")) {
-                characterStack.push(arr[i]);
             }
         }
-        unionRevers();
+
+    }
+
+
+    private void priority(String s){
+        double first = 0;
+        double second = 0;
+        double result = 0;
+        String sym = "";
+
+
+        if (priorities.get(s) > priorities.get(characterStack.peek())){
+            first = Double.valueOf(digitStack.pop());
+            second = Double.valueOf(digitStack.pop());
+            sym = characterStack.pop();
+        }
+
+        if (sym.equals("+")) {
+            result = second + first;
+            digitStack.push(String.valueOf(result));
+        } else if (sym.equals("-")) {
+            result = second - first;
+            digitStack.push(String.valueOf(result));
+        } else if (sym.equals("*")) {
+            result = second * first;
+            digitStack.push(String.valueOf(result));
+        } else if (sym.equals("/")) {
+            result = second / first;
+            digitStack.push(String.valueOf(result));
+        }
+
+        System.out.println(digitStack);
     }
 
     private void unionRevers() {
