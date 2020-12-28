@@ -1,5 +1,7 @@
 package GUI;
 
+import Logic.CalcLogic;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -7,14 +9,17 @@ import java.awt.event.ActionListener;
 
 public class CalcGUI extends JFrame implements ActionListener {
 
-    JFrame frame;
-    JTextField textField;
-    JButton[] digitButtons = new JButton[10];
-    JButton[] functionButtons = new JButton[11];
-    JButton addButton,subButton,mulButton,divButton;
-    JButton decButton,equButton,delButton, clrButton, negButton;
-    JPanel panel;
-    JButton bracketLeft, bracketRight;
+    private JFrame frame;
+    private JTextField textField;
+    private JButton[] digitButtons = new JButton[10];
+    private JButton[] functionButtons = new JButton[11];
+    private JButton addButton,subButton,mulButton,divButton;
+    private JButton decButton,equButton,delButton, clrButton, negButton;
+    private JPanel panel;
+    private JButton bracketLeft, bracketRight;
+    private CalcLogic calcLogic;
+
+    private String expression;
 
     Font myFont = new Font("Ink Free", Font.BOLD, 30);
 
@@ -24,6 +29,7 @@ public class CalcGUI extends JFrame implements ActionListener {
         frame.setSize(420, 550);
         frame.setLayout(null);
         frame.setResizable(false);
+        frame.setAlwaysOnTop(true);
 
         textField = new JTextField();
         textField.setBounds(50, 25, 300, 50);
@@ -101,6 +107,9 @@ public class CalcGUI extends JFrame implements ActionListener {
         frame.add(clrButton);
         frame.add(textField);
         frame.setVisible(true);
+
+        this.expression = textField.getText();
+        calcLogic = new CalcLogic(expression);
     }
 
 
@@ -115,49 +124,45 @@ public class CalcGUI extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        Object obj = e.getSource();
+
         for (int i = 0; i < 10; i++) {
-            if (e.getSource() == digitButtons[i]){
+            if (obj == digitButtons[i]) {
                 textField.setText(textField.getText().concat(String.valueOf(i)));
             }
         }
-        if (e.getSource()==decButton){
+
+
+        if (obj == decButton){
             textField.setText(textField.getText().concat("."));
-        }
-        if (e.getSource()==addButton){
+        } else if (obj == addButton){
             textField.setText(textField.getText().concat(String.valueOf(addButton.getText())));
-        }
-        if (e.getSource()==subButton){
+        } else if (obj == subButton){
             textField.setText(textField.getText().concat(String.valueOf(subButton.getText())));
-        }
-        if (e.getSource()==mulButton){
+        } else if (obj == mulButton){
             textField.setText(textField.getText().concat(String.valueOf(mulButton.getText())));
-        }
-        if (e.getSource()==divButton){
+        } else if (obj == divButton){
             textField.setText(textField.getText().concat(String.valueOf(divButton.getText())));
-        }
-        if (e.getSource()==equButton){
+        } else if (obj == equButton){
             textField.setText(textField.getText().concat(String.valueOf(equButton.getText())));
-        }
-        if (e.getSource()==clrButton){
+        } else if (obj == clrButton){
             textField.setText("");
-        }
-        if (e.getSource()==bracketLeft){
+        } else if (obj == bracketLeft){
             textField.setText(textField.getText().concat(String.valueOf(bracketLeft.getText())));
-        }
-        if (e.getSource()==bracketRight){
+        } else if (obj == bracketRight){
             textField.setText(textField.getText().concat(String.valueOf(bracketRight.getText())));
-        }
-        if (e.getSource()==delButton){
+        } else if (obj == delButton){
             String temp = textField.getText();
             textField.setText("");
             for (int i = 0; i <temp.length() - 1 ; i++) {
                 textField.setText(textField.getText()+temp.charAt(i));
             }
-        }
-        if (e.getSource()==negButton){
+        } else if (obj == negButton){
             double temp = Double.parseDouble(textField.getText());
             temp*=-1;
             textField.setText(String.valueOf(temp));
+        }else {
+            throw new RuntimeException("Unknown source: " + obj);
         }
     }
 }
