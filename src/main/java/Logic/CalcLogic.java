@@ -28,7 +28,7 @@ public class CalcLogic {
         priorities = new HashMap<>();
         addPriorities();
         convertString();
-        result();
+        System.out.println(result());
     }
 
     private void addPriorities() {
@@ -172,8 +172,12 @@ public class CalcLogic {
     }
 
     private double result(){
-        double result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
-        System.out.println(result);
+        double result = 0;
+        if (digitStack.getSize() > 1) {
+             result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
+        }else{
+            return Double.valueOf(digitStack.pop());
+        }
         return result;
     }
 }
