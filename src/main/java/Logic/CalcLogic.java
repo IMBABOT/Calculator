@@ -172,10 +172,8 @@ public class CalcLogic {
     }
 
     private double result(){
-         double result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
-         return result;
+        double result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
+        System.out.println(result);
+        return result;
     }
-
-
 }
-
