@@ -11,8 +11,7 @@ public class CalcLogic {
     private StringStack digitStack;
     private StringStack resultStack;
 
-    private StringStack temp;
-    private StringStack result;
+
     private String[] arr;
     private String expression;
 
@@ -27,8 +26,6 @@ public class CalcLogic {
         digitStack = new StringStack();
         priorities = new HashMap<>();
         resultStack = new StringStack();
-        result = new StringStack();
-        temp = new StringStack();
         addPriorities();
         convertString();
     }
@@ -38,8 +35,6 @@ public class CalcLogic {
         priorities.put("/", 3);
         priorities.put("+", 2);
         priorities.put("-", 2);
-        priorities.put("(", 1);
-        priorities.put(")", -1);
         priorities.put("0", 0);
         priorities.put("1", 0);
         priorities.put("2", 0);
@@ -56,93 +51,47 @@ public class CalcLogic {
     public void convertString() {
         arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
-                digitStack.push(arr[i]);
-            } else if (arr[i].matches("[+=\\-*/(^)]+")) {
-                characterStack.push(arr[i]);
-                if (characterStack.peek().matches("[+\\-*/]")) {
-                    priority(characterStack.pop());
-                }
-            }
-        }
-
-    }
-
-
-    private void priority(String s){
+        String sym = "";
         double first = 0;
         double second = 0;
         double result = 0;
-        String sym = "";
 
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].matches(("[0-9]*\\.?[0-9]*"))){
+                digitStack.push(arr[i]);
+            } else if (arr[i].matches(("[+=\\-*/)(^]+")) && characterStack.isEmpty()){
+                characterStack.push(arr[i]);
+            }else if (characterStack.peek().equals("(") || characterStack.peek().equals(")")){
+                characterStack.push(arr[i]);
+            } else if ((arr[i].matches(("[+=\\-*/^]+")) && priorities.get(arr[i]) > priorities.get(characterStack.peek()))){
+                characterStack.push(arr[i]);
+            } else if (arr[i].matches("[()]")) {
+                characterStack.push(arr[i]);
+            }else if (arr[i].matches(("[+=\\-*/)(^]+")) && priorities.get(arr[i]) < priorities.get(characterStack.peek())){
+                sym = characterStack.pop();
+                first = Double.valueOf(digitStack.pop());
+                second = Double.valueOf(digitStack.pop());
 
-        if (priorities.get(s) > priorities.get(characterStack.peek())){
-            first = Double.valueOf(digitStack.pop());
-            second = Double.valueOf(digitStack.pop());
-            sym = characterStack.pop();
-        }
-
-        if (sym.equals("+")) {
-            result = second + first;
-            digitStack.push(String.valueOf(result));
-        } else if (sym.equals("-")) {
-            result = second - first;
-            digitStack.push(String.valueOf(result));
-        } else if (sym.equals("*")) {
-            result = second * first;
-            digitStack.push(String.valueOf(result));
-        } else if (sym.equals("/")) {
-            result = second / first;
-            digitStack.push(String.valueOf(result));
-        }
-
-        System.out.println(digitStack);
-    }
-
-    private void unionRevers() {
-        while (!characterStack.isEmpty()) {
-            digitStack.push(characterStack.pop());
-        }
-
-        while (!digitStack.isEmpty()) {
-            temp.push(digitStack.pop());
-        }
-        answer();
-    }
-
-    private void answer() {
-        double first = 0;
-        double second = 0;
-        double res = 0;
-        String sym = "";
-
-
-
-        while (!temp.isEmpty()){
-            if (temp.peek().matches(("[0-9]*\\.?[0-9]*"))){
-                result.push(temp.pop());
-            }
-            if (temp.peek().matches("[+=\\-*/^)]+")) {
-                first = Double.valueOf(result.pop());
-                second = Double.valueOf(result.pop());
-                sym = temp.pop();
-
-                if (sym.equals("+")) {
-                    res = second + first;
-                    result.push(String.valueOf(res));
-                } else if (sym.equals("-")) {
-                    res = second - first;
-                    result.push(String.valueOf(res));
-                } else if (sym.equals("*")) {
-                    res = second * first;
-                    result.push(String.valueOf(res));
-                } else if (sym.equals("/")) {
-                    res = second / first;
-                    result.push(String.valueOf(res));
+                if (sym.equals("+")){
+                    result = second + first;
+                    digitStack.push(String.valueOf(result));
                 }
+                if (sym.equals("-")){
+                    result = second - first;
+                    digitStack.push(String.valueOf(result));
+                }
+                if (sym.equals("*")){
+                    result = second * first;
+                    digitStack.push(String.valueOf(result));
+                }
+                if (sym.equals("/")){
+                    result = second / first;
+                    digitStack.push(String.valueOf(result));
+                }
+
             }
         }
-        System.out.println(result);
+
     }
+
 }
