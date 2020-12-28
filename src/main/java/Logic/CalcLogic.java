@@ -2,6 +2,7 @@ package Logic;
 
 import Stacks.*;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +28,7 @@ public class CalcLogic {
         priorities = new HashMap<>();
         addPriorities();
         convertString();
+        result();
     }
 
     private void addPriorities() {
@@ -58,14 +60,13 @@ public class CalcLogic {
 
 
         for (int i = 0; i < arr.length; i++) {
-
-
             if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
                 digitStack.push(arr[i]);
                 if (i == arr.length - 1) {
                     sym = characterStack.pop();
                     first = Double.valueOf(digitStack.pop());
                     second = Double.valueOf(digitStack.pop());
+
 
                     if (sym.equals("+")) {
                         result = second + first;
@@ -168,8 +169,13 @@ public class CalcLogic {
 
             }
         }
-
     }
+
+    private double result(){
+         double result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
+         return result;
+    }
+
 
 }
 
