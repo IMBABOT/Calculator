@@ -46,7 +46,6 @@ public class StringStack {
         }else {
             temp = stack[--top];
         }
-
         size = top;
         return temp;
     }
