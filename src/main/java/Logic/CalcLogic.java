@@ -28,6 +28,7 @@ public class CalcLogic {
         priorities = new HashMap<>();
         addPriorities();
         convertString();
+        getSymbol();
         System.out.println(result());
     }
 
@@ -57,6 +58,8 @@ public class CalcLogic {
         double first = 0;
         double second = 0;
         double result = 0;
+
+
 
 
         for (int i = 0; i < arr.length; i++) {
@@ -171,12 +174,39 @@ public class CalcLogic {
         }
     }
 
-    private double result(){
-        double result = 0;
+    private String getSymbol(){
+        String sym = "";
+        for (int i = 0; i < arr.length ; i++) {
+            if (arr[i].equals("(")){
+                sym = arr[i - 1];
+            }
+        }
+
+        return sym;
+    }
+
+    private double result() {
+            double result = 0;
+
         if (digitStack.getSize() > 1) {
-             result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
-        }else{
-            return Double.valueOf(digitStack.pop());
+            double first = Double.valueOf(digitStack.pop());
+            double second = Double.valueOf(digitStack.peek());
+            String sym = getSymbol();
+            if (sym.equals("+")) {
+                result = second + first;
+            }
+            if (sym.equals("-")) {
+                result = second - first;
+            }
+            if (sym.equals("*")) {
+                result = second * first;
+            }
+            if (sym.equals("-")) {
+                result = second - first;
+            }
+
+        }else if (digitStack.getSize() == 1){
+            result = Double.valueOf(digitStack.pop());
         }
         return result;
     }
