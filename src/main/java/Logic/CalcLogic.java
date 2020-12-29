@@ -33,7 +33,7 @@ public class CalcLogic {
         list = new ArrayList<>();
         addPriorities();
         convertString();
-
+        System.out.println(result());
     }
 
     private void addPriorities() {
@@ -78,7 +78,7 @@ public class CalcLogic {
         result();
     }
 
-    private void result(){
+    private double result(){
         double first = 0;
         double second = 0;
         String sym = "";
@@ -88,19 +88,17 @@ public class CalcLogic {
             list.add(String.valueOf(string.charAt(i)));
         }
 
-
-        for (int i = 0; i < list.size(); i++) {
-           if (list.get(i).matches("[0-9]*\\.?[0-9]*")){
-               while (list.get(i).matches("[0-9]*\\.?[0-9]*")){
-                   resultStack.push(list.remove(i));
-               }
-           }
-        }
-
-        System.out.println(resultStack);
-
-
-
+        while (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).matches("[0-9]*\\.?[0-9]*")) {
+                    while (list.get(i).matches("[0-9]*\\.?[0-9]*")) {
+                        resultStack.push(list.remove(i));
+                    }
+                }
+                if (list.get(i).matches(("[+=\\-*()/^]+"))) {
+                    sym = list.remove(i);
+                }
+            }
 
 
             first = Double.valueOf(resultStack.pop());
@@ -122,6 +120,11 @@ public class CalcLogic {
                 answer = second / first;
                 resultStack.push(String.valueOf(answer));
             }
+        }
 
+        answer = Double.valueOf(resultStack.pop());
+
+        return answer;
     }
+
 }
