@@ -171,22 +171,30 @@ public class CalcLogic {
 
             }
         }
+
     }
 
     private String getSymbol(){
         String sym = "";
+        double temp = 0;
         for (int i = 0; i < arr.length ; i++) {
-            if (arr[i].equals("(")){
+            if (arr[0].equals("(")){
+                while (!digitStack.isEmpty()){
+                    temp += Double.valueOf(digitStack.pop());
+                }
+            }  else if (arr[i].equals("(")){
                 sym = arr[i - 1];
             }
         }
-
+        sym = String.valueOf(temp);
         return sym;
     }
 
     public String result() {
-            double result = 0;
-            String temp = "";
+        double result = 0;
+        String temp = "";
+
+        System.out.println(getSymbol());
 
         if (digitStack.getSize() > 1) {
             double first = Double.valueOf(digitStack.pop());
@@ -205,13 +213,10 @@ public class CalcLogic {
                 result = second - first;
             }
 
-        }else if (digitStack.getSize() == 1){
+        } else if (digitStack.getSize() == 1) {
             result = Double.valueOf(digitStack.pop());
+            temp = String.valueOf(result);
         }
-
-        temp = String.valueOf(result);
-
         return temp;
     }
-
 }
