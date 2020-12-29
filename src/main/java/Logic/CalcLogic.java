@@ -2,6 +2,7 @@ package Logic;
 
 import Stacks.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +11,10 @@ import java.util.Map;
 public class CalcLogic {
 
     private StringStack characterStack;
+    private StringStack resultStack;
     private String string;
+
+    private ArrayList<String> list;
 
 
     private String[] arr;
@@ -24,7 +28,9 @@ public class CalcLogic {
         this.expression = expression;
         this.string = new String();
         characterStack = new StringStack();
+        resultStack = new StringStack();
         priorities = new HashMap<>();
+        list = new ArrayList<>();
         addPriorities();
         convertString();
 
@@ -69,20 +75,53 @@ public class CalcLogic {
         while (!characterStack.isEmpty()){
             string += characterStack.pop();
         }
+        result();
+    }
+
+    private void result(){
+        double first = 0;
+        double second = 0;
+        String sym = "";
+        double answer = 0;
+
+        for (int i = 0; i < string.length() ; i++) {
+            list.add(String.valueOf(string.charAt(i)));
+        }
+
+
+        for (int i = 0; i < list.size(); i++) {
+           if (list.get(i).matches("[0-9]*\\.?[0-9]*")){
+               while (list.get(i).matches("[0-9]*\\.?[0-9]*")){
+                   resultStack.push(list.remove(i));
+               }
+           }
+        }
+
+        System.out.println(resultStack);
+
+
+
+
+
+            first = Double.valueOf(resultStack.pop());
+            second = Double.valueOf(resultStack.pop());
+
+            if (sym.equals("+")) {
+                answer = second + first;
+                resultStack.push(String.valueOf(answer));
+            }
+            if (sym.equals("*")) {
+                answer = second * first;
+                resultStack.push(String.valueOf(answer));
+            }
+            if (sym.equals("-")) {
+                answer = second - first;
+                resultStack.push(String.valueOf(answer));
+            }
+            if (sym.equals("/")) {
+                answer = second / first;
+                resultStack.push(String.valueOf(answer));
+            }
 
     }
 }
-
-
-//
-//    private double result(){
-//        double result = 0;
-//        if (digitStack.getSize() > 1) {
-//             result = Double.valueOf(digitStack.pop()) + Double.valueOf(digitStack.pop());
-//        }else{
-//            return Double.valueOf(digitStack.pop());
-//        }
-//        return result;
-//    }
-//
-//}
