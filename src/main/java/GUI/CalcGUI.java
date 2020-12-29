@@ -183,6 +183,6 @@ public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtEx
         }
 
         JOptionPane.showMessageDialog(this, message);
-        System.exit(1);
+
     }
 }
