@@ -29,7 +29,6 @@ public class CalcLogic {
         addPriorities();
         convertString();
         getSymbol();
-        System.out.println(result());
     }
 
     private void addPriorities() {
@@ -185,8 +184,9 @@ public class CalcLogic {
         return sym;
     }
 
-    private double result() {
+    public String result() {
             double result = 0;
+            String temp = "";
 
         if (digitStack.getSize() > 1) {
             double first = Double.valueOf(digitStack.pop());
@@ -208,7 +208,10 @@ public class CalcLogic {
         }else if (digitStack.getSize() == 1){
             result = Double.valueOf(digitStack.pop());
         }
-        return result;
+
+        temp = String.valueOf(result);
+
+        return temp;
     }
 
 }
