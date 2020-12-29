@@ -28,7 +28,6 @@ public class CalcLogic {
         priorities = new HashMap<>();
         addPriorities();
         convertString();
-        getSymbol();
     }
 
     private void addPriorities() {
@@ -187,19 +186,21 @@ public class CalcLogic {
             }
         }
         sym = String.valueOf(temp);
+
         return sym;
     }
 
     public String result() {
         double result = 0;
         String temp = "";
+        String sym = getSymbol();
 
-        System.out.println(getSymbol());
+
 
         if (digitStack.getSize() > 1) {
             double first = Double.valueOf(digitStack.pop());
             double second = Double.valueOf(digitStack.peek());
-            String sym = getSymbol();
+
             if (sym.equals("+")) {
                 result = second + first;
             }
@@ -216,6 +217,8 @@ public class CalcLogic {
         } else if (digitStack.getSize() == 1) {
             result = Double.valueOf(digitStack.pop());
             temp = String.valueOf(result);
+        } else if (sym.matches("[0-9]*\\.?[0-9]*")){
+            temp = sym;
         }
         return temp;
     }
