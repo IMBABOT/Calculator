@@ -85,8 +85,10 @@ public class CalcLogic {
                 }
             }
         }
-        System.out.println(string);
-        System.out.println(characterStack);
+
+        while (!characterStack.isEmpty()){
+            string += characterStack.pop();
+        }
 
         result();
     }
@@ -107,35 +109,31 @@ public class CalcLogic {
                     while (list.get(i).matches("[0-9]*\\.?[0-9]*")) {
                         resultStack.push(list.remove(i));
                     }
-                }
-                if (list.get(i).matches(("[+=\\-*()/^]+"))) {
+                }else if (list.get(i).matches(("[+=\\-*()/^]+"))) {
                     sym = list.remove(i);
+                    first = Double.valueOf(resultStack.pop());
+                    second = Double.valueOf(resultStack.pop());
+
+                    if (sym.equals("+")) {
+                        answer = second + first;
+                        resultStack.push(String.valueOf(answer));
+                    }
+                    if (sym.equals("*")) {
+                        answer = second * first;
+                        resultStack.push(String.valueOf(answer));
+                    }
+                    if (sym.equals("-")) {
+                        answer = second - first;
+                        resultStack.push(String.valueOf(answer));
+                    }
+                    if (sym.equals("/")) {
+                        answer = second / first;
+                        resultStack.push(String.valueOf(answer));
+                    }
+                }
                 }
             }
-
-
-            first = Double.valueOf(resultStack.pop());
-            second = Double.valueOf(resultStack.pop());
-
-            if (sym.equals("+")) {
-                answer = second + first;
-                resultStack.push(String.valueOf(answer));
-            }
-            if (sym.equals("*")) {
-                answer = second * first;
-                resultStack.push(String.valueOf(answer));
-            }
-            if (sym.equals("-")) {
-                answer = second - first;
-                resultStack.push(String.valueOf(answer));
-            }
-            if (sym.equals("/")) {
-                answer = second / first;
-                resultStack.push(String.valueOf(answer));
-            }
-        }
-
-        answer = Double.valueOf(resultStack.pop());
+       // answer = Double.valueOf(resultStack.pop());
 
         return answer;
     }
