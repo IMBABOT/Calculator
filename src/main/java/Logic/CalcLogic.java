@@ -60,21 +60,34 @@ public class CalcLogic {
         arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
         for (int i = 0; i < arr.length ; i++) {
-            if (arr[i].matches(("[0-9]*\\.?[0-9]*"))) {
-                string += arr[i];
-            }else if (arr[i].matches(("[+=\\-*()/^]+")) && characterStack.isEmpty()){
+            if (arr[i].equals("(")){
                 characterStack.push(arr[i]);
-            }else if (arr[i].matches(("[+=\\-*()/^]+")) && !characterStack.isEmpty() && priorities.get(arr[i]) > priorities.get(characterStack.peek())){
-                while (!characterStack.isEmpty() && priorities.get(arr[i]) > priorities.get(characterStack.peek())){
+            }
+            if (arr[i].matches("[0-9]*\\.?[0-9]*")){
+                string += arr[i];
+            }
+            if (!characterStack.isEmpty() && arr[i].matches(("[+=\\-*()/^]+")) && priorities.get(arr[i]) > priorities.get(characterStack.peek())){
+                while (priorities.get(arr[i]) > priorities.get(characterStack.peek())){
                     characterStack.push(arr[i]);
                 }
-            }else if (arr[i].matches(("[+=\\-*()/^]+")) && !characterStack.isEmpty() && priorities.get(arr[i]) < priorities.get(characterStack.peek())){
-                    characterStack.push(arr[i]);
+            }else if (arr[i].matches(("[+=\\-*()/^]+")) && characterStack.isEmpty()){
+                characterStack.push(arr[i]);
+            }
+
+
+            if (arr[i].equals(")")){
+                while (!characterStack.peek().equals("(")){
+                    string += characterStack.pop();
+                    if (characterStack.peek().equals("(")){
+                        characterStack.pop();
+                        break;
+                    }
+                }
             }
         }
-        while (!characterStack.isEmpty()){
-            string += characterStack.pop();
-        }
+        System.out.println(string);
+        System.out.println(characterStack);
+
         result();
     }
 
