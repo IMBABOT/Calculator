@@ -110,7 +110,7 @@ public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtEx
         frame.setVisible(true);
 
         this.expression = new String();
-     //   calcLogic = new CalcLogic();
+        //   calcLogic = new CalcLogic();
     }
 
 
@@ -167,6 +167,7 @@ public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtEx
             temp*=-1;
             textField.setText(String.valueOf(temp));
         }
+
     }
 
     @Override

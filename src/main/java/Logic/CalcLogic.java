@@ -169,7 +169,10 @@ public class CalcLogic {
                 i--;
 
             }
+
         }
+
+        System.out.println(digitStack);
 
     }
 
@@ -196,10 +199,24 @@ public class CalcLogic {
         String sym = getSymbol();
 
 
-
         if (digitStack.getSize() > 1) {
             double first = Double.valueOf(digitStack.pop());
-            double second = Double.valueOf(digitStack.peek());
+            double second = Double.valueOf(digitStack.peek());;
+
+
+            if (first < 0 && second > 0){
+                result = -first + second;
+                temp = String.valueOf(result);
+            }else if (first < 0 && second < 0){
+                result = first + second;
+                temp = String.valueOf(result);
+            }else if (first > 0 && second > 0){
+                result = first * second;
+                temp = String.valueOf(result);
+            }else if (first > 0 && second < 0){
+                result = first - second;
+                temp = String.valueOf(result);
+            }
 
             if (sym.equals("+")) {
                 result = second + first;
