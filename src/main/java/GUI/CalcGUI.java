@@ -110,7 +110,7 @@ public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtEx
         frame.setVisible(true);
 
         this.expression = new String();
-        //   calcLogic = new CalcLogic();
+
     }
 
 
@@ -148,7 +148,7 @@ public class CalcGUI extends JFrame implements ActionListener, Thread.UncaughtEx
         } else if (obj == equButton){
             expression = textField.getText();
             calcLogic = new CalcLogic(expression);
-            String temp = calcLogic.result();
+             String temp = calcLogic.result();
             textField.setText(temp);
         } else if (obj == clrButton){
             textField.setText("");

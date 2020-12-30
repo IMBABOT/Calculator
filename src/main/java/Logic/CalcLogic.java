@@ -17,7 +17,6 @@ public class CalcLogic {
     private String expression;
 
 
-
     private Map<String, Integer> priorities;
 
 
@@ -28,6 +27,7 @@ public class CalcLogic {
         priorities = new HashMap<>();
         addPriorities();
         convertString();
+
     }
 
     private void addPriorities() {
@@ -48,15 +48,23 @@ public class CalcLogic {
     }
 
 
-
     public void convertString() {
         arr = expression.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
 
+        String split = "";
         String sym = "";
         double first = 0;
         double second = 0;
         double result = 0;
 
+
+        if (checkNegative(arr)){
+            arr = negativeNumbers(arr);
+            for (int i = 0; i < arr.length ; i++) {
+                split += arr[i];
+            }
+            arr = split.split("(?<=[\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[^\\d.])|(?<=[^\\d.])(?=[\\d.])");
+        }
 
 
 
@@ -168,55 +176,63 @@ public class CalcLogic {
                 }
                 i--;
 
+
             }
-
         }
-
-        System.out.println(digitStack);
 
     }
 
-    private String getSymbol(){
-        String sym = "";
-        double temp = 0;
+
+    private String[] negativeNumbers(String[] arr){
+        StringBuilder sb = new StringBuilder();
+        String result = "";
+        String[] array = new String[]{};
+
         for (int i = 0; i < arr.length ; i++) {
-            if (arr[0].equals("(")){
-                while (!digitStack.isEmpty()){
-                    temp += Double.valueOf(digitStack.pop());
-                }
-            }  else if (arr[i].equals("(")){
-                sym = arr[i - 1];
+            sb.append(arr[i]);
+        }
+
+        for (int i = 0; i < sb.length() ; i++) {
+            if (sb.charAt(0) == '-'){
+                sb.insert(0, "0");
+            }else if (sb.charAt(i) == '('){
+                sb.insert(i + 1, "0");
             }
         }
-        sym = String.valueOf(temp);
+        result = sb.toString();
+        array = result.split("");
 
-        return sym;
+        return array;
     }
+
+    private boolean checkNegative(String[] arr){
+        boolean isNegative = false;
+        for (int i = 0; i < arr.length ; i++) {
+            if (arr[0].equals("-") || (arr[i].equals("(") && arr[i + 1].equals("-"))){
+                isNegative = true;
+            }
+        }
+        return isNegative;
+    }
+
+
 
     public String result() {
         double result = 0;
-        String temp = "";
-        String sym = getSymbol();
+        double first = 0;
+        double second = 0;
+        String sym = "";
 
+        if (digitStack.getSize() == 1) {
+            result = Double.valueOf(digitStack.pop());
+        }
 
-        if (digitStack.getSize() > 1) {
-            double first = Double.valueOf(digitStack.pop());
-            double second = Double.valueOf(digitStack.peek());;
+        while (!characterStack.isEmpty()) {
+            digitStack.push(characterStack.pop());
 
-
-            if (first < 0 && second > 0){
-                result = -first + second;
-                temp = String.valueOf(result);
-            }else if (first < 0 && second < 0){
-                result = first + second;
-                temp = String.valueOf(result);
-            }else if (first > 0 && second > 0){
-                result = first * second;
-                temp = String.valueOf(result);
-            }else if (first > 0 && second < 0){
-                result = first - second;
-                temp = String.valueOf(result);
-            }
+            sym = digitStack.pop();
+            first = Double.valueOf(digitStack.pop());
+            second = Double.valueOf(digitStack.peek());
 
             if (sym.equals("+")) {
                 result = second + first;
@@ -231,12 +247,10 @@ public class CalcLogic {
                 result = second - first;
             }
 
-        } else if (digitStack.getSize() == 1) {
-            result = Double.valueOf(digitStack.pop());
-            temp = String.valueOf(result);
-        } else if (sym.matches("[0-9]*\\.?[0-9]*")){
-            temp = sym;
         }
-        return temp;
+
+        return String.valueOf(result);
+
     }
+
 }
