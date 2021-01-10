@@ -25,7 +25,7 @@ public class StringStack {
     }
 
     public boolean isEmpty(){
-        return top == 0;1
+        return top == 0;
     }
 
     public void push(String value){
